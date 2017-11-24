@@ -1,0 +1,126 @@
+set system host-name Agg1-Region1
+
+
+set system services ssh root-login allow
+
+set system services telnet connection-limit 10
+
+set system services netconf ssh
+
+set system services netconf traceoptions flag all
+
+set system services rest enable-explorer
+
+
+delete interfaces fxp0.0 family inet dhcp 
+
+delete system processes dhcp-service
+
+delete system syslog
+
+delete chassis auto-image-upgrade 
+
+
+
+
+top edit interfaces ge-0/0/2.0 family inet
+ 
+ set address 10.45.10.2/30
+
+top edit interfaces lo0.0 family inet
+ 
+ set address 163.125.60.30/32
+
+top edit interfaces ge-0/0/0.0 family inet
+ 
+ set address 10.45.1.1/30
+
+top edit interfaces ge-0/0/3.0 family inet
+ 
+ set address 10.45.100.2/30
+
+top edit interfaces ge-0/0/4.0 family inet
+ 
+ set address 10.45.150.2/30
+
+top edit interfaces ge-0/0/5.0 family inet
+ 
+ set address 10.131.71.30/24
+
+
+
+top
+
+set routing-options router-id 163.125.60.30
+
+set protocols ospf area 0 interface lo0.0
+
+set protocols ospf area 0 interface ge-0/0/0.0
+
+set protocols ospf area 0 interface ge-0/0/2.0
+
+set protocols ospf area 0 interface ge-0/0/3.0
+
+set protocols ospf area 0 interface ge-0/0/4.0
+
+
+
+
+top
+set protocols ldp transport-address router-id
+
+set protocols mpls interface ge-0/0/0.0
+
+set protocols ldp interface ge-0/0/0.0
+
+set protocols mpls interface ge-0/0/2.0
+
+set protocols ldp interface ge-0/0/2.0
+
+
+
+
+top
+set routing-options router-id 163.125.60.30
+ 
+set routing-options autonomous-system 65100
+
+top edit protocols bgp
+
+set export export_bgp
+
+edit group bgp_neighbors
+
+set local-address 163.125.60.30
+
+set neighbor 163.125.60.10 peer-as 65001 
+
+set neighbor 163.125.60.100 peer-as 8452 
+
+set neighbor 163.125.60.200 peer-as 8452 
+
+
+
+top edit policy-options policy-statement export_bgp 
+
+edit term 1 
+
+edit from route-filter 0.0.0.0/32 address-mask 0.0.0.0
+
+set accept
+
+top edit policy-options policy-statement export_bgp
+
+edit term 2
+
+set from protocol bgp
+
+set from route-type external
+
+set then next-hop self
+
+
+
+commit
+
+exit

@@ -1,0 +1,81 @@
+set system host-name Core2
+
+
+set system services ssh root-login allow
+
+set system services telnet connection-limit 10
+
+set system services netconf ssh
+
+set system services netconf traceoptions flag all
+
+set system services rest enable-explorer
+
+
+delete interfaces fxp0.0 family inet dhcp 
+
+delete system processes dhcp-service
+
+delete system syslog
+
+delete chassis auto-image-upgrade 
+
+
+
+
+top edit interfaces ge-0/0/2.0 family inet
+ 
+ set address 10.45.10.1/30
+
+top edit interfaces lo0.0 family inet
+ 
+ set address 163.125.60.60/32
+
+top edit interfaces fxp0.0 family inet
+ 
+ set address 10.131.71.60/24
+
+top edit interfaces ge-0/0/4.0 family inet
+ 
+ set address 10.45.20.1/30
+
+
+
+top
+
+set routing-options router-id 163.125.60.40
+
+set protocols ospf area 0 interface lo0.0
+
+set protocols ospf area 0 interface ge-0/0/0.0
+
+set protocols ospf area 0 interface ge-0/0/2.0
+
+set protocols ospf area 0 interface ge-0/0/4.0
+
+
+
+
+top
+set protocols ldp transport-address router-id
+
+set protocols mpls interface ge-0/0/0.0
+
+set protocols ldp interface ge-0/0/0.0
+
+set protocols mpls interface ge-0/0/2.0
+
+set protocols ldp interface ge-0/0/2.0
+
+set protocols mpls interface ge-0/0/4.0
+
+set protocols ldp interface ge-0/0/4.0
+
+
+
+
+
+
+commit
+
+exit

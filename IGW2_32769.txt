@@ -1,0 +1,106 @@
+set system host-name IGW2
+
+
+set system services ssh root-login allow
+
+set system services telnet connection-limit 10
+
+set system services netconf ssh
+
+set system services netconf traceoptions flag all
+
+set system services rest enable-explorer
+
+
+delete interfaces fxp0.0 family inet dhcp 
+
+delete system processes dhcp-service
+
+delete system syslog
+
+delete chassis auto-image-upgrade 
+
+
+
+
+top edit interfaces ge-0/0/2.0 family inet
+ 
+ set address 10.45.200.1/30
+
+top edit interfaces lo0.0 family inet
+ 
+ set address 163.125.60.200/32
+
+top edit interfaces ge-0/0/0.0 family inet
+ 
+ set address 10.45.150.1/30
+
+top edit interfaces ge-0/0/5.0 family inet
+ 
+ set address 10.131.71.200/24
+
+top edit interfaces ge-0/0/1.0 family inet
+ 
+ set address 20.45.200.2/30
+
+
+
+top
+
+set routing-options router-id 163.125.60.200
+
+set protocols ospf area 0 interface lo0.0
+
+set protocols ospf area 0 interface ge-0/0/0.0
+
+set protocols ospf area 0 interface ge-0/0/2.0
+
+
+
+
+
+
+top
+set routing-options router-id 163.125.60.200
+ 
+set routing-options autonomous-system 8452
+
+top edit protocols bgp
+
+set export export_bgp
+
+edit group bgp_neighbors
+
+set local-address 163.125.60.200
+
+set neighbor 163.125.60.30 peer-as 65100 
+
+set neighbor 163.125.60.40 peer-as 65100 
+
+set neighbor 80.132.100.1 peer-as 3356 
+
+
+
+top edit policy-options policy-statement export_bgp 
+
+edit term 1 
+
+edit from route-filter 0.0.0.0/32 address-mask 0.0.0.0
+
+set accept
+
+top edit policy-options policy-statement export_bgp
+
+edit term 2
+
+set from protocol bgp
+
+set from route-type external
+
+set then next-hop self
+
+
+
+commit
+
+exit
