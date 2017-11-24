@@ -1,0 +1,360 @@
+PE1:
+  hostname: PE1-Region1
+  port: 32781
+  mgmt_ip: 10.131.71.10
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.10
+      sm: 32
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.10
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 10.45.1.2
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.10
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+
+  mpls:
+    mpls_id: 163.125.60.10
+    interfaces:
+      - ge-0/0/0.0
+
+  bgp:
+    local_asn: 65001
+    bgp_id: 163.125.60.10
+    neighbors:
+      163.125.60.20:
+        remote_asn: 65001
+        type: ibgp
+      163.125.60.30:
+        remote_asn: 65100
+        type: ebgp
+
+
+
+PE2:
+  hostname: PE2-Region2
+  port: 32782
+  mgmt_ip: 10.131.71.20
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.20
+      sm: 32
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.20
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 10.45.2.2
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.20
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+
+  mpls:
+    mpls_id: 163.125.60.20
+    interfaces:
+      - ge-0/0/0.0
+
+  bgp:
+    local_asn: 65001
+    bgp_id: 163.125.60.20
+    neighbors:
+      163.125.60.10:
+        remote_asn: 65001
+        type: ibgp
+      163.125.60.40:
+        remote_asn: 65100
+        type: ebgp
+
+
+
+Agg1-Region1:
+  hostname: Agg1-Region1
+  port: 32772
+  mgmt_ip: 10.131.71.30
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.30
+      sm: 32
+
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.30
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 10.45.1.1
+      sm: 30
+
+    ge-0/0/2.0:
+      ipaddr: 10.45.10.2
+      sm: 30
+
+    ge-0/0/3.0:
+      ipaddr: 10.45.100.2
+      sm: 30
+
+    ge-0/0/4.0:
+      ipaddr: 10.45.150.2
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.30
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+      - ge-0/0/3.0
+      - ge-0/0/4.0
+
+  mpls:
+    mpls_id: 163.125.60.30
+    interfaces:
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+
+  bgp:
+    local_asn: 65100
+    bgp_id: 163.125.60.30
+    neighbors:
+      163.125.60.10:
+        remote_asn: 65001
+        type: ebgp
+      163.125.60.100:
+        remote_asn: 8452
+        type: ebgp
+      163.125.60.200:
+        remote_asn: 8452
+        type: ebgp
+
+
+Agg2-Region2:
+  hostname: Agg2-Region2
+  port: 32774
+  mgmt_ip: 10.131.71.40
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.40
+      sm: 32
+
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.40
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 10.45.2.1
+      sm: 30
+
+    ge-0/0/2.0:
+      ipaddr: 10.45.20.2
+      sm: 30
+
+    ge-0/0/3.0:
+      ipaddr: 10.45.200.2
+      sm: 30
+
+    ge-0/0/4.0:
+      ipaddr: 10.45.250.2
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.40
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+      - ge-0/0/3.0
+      - ge-0/0/4.0
+
+  mpls:
+    mpls_id: 163.125.60.40
+    interfaces:
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+
+  bgp:
+    local_asn: 65100
+    bgp_id: 163.125.60.40
+    neighbors:
+      163.125.60.20:
+        remote_asn: 65001
+        type: ebgp
+      163.125.60.100:
+        remote_asn: 8452
+        type: ebgp
+      163.125.60.200:
+        remote_asn: 8452
+        type: ebgp
+
+
+IGW1:
+  hostname: IGW1
+  port: 32771
+  mgmt_ip: 10.131.71.100
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.100
+      sm: 32
+
+    fxp0.0:
+      ipaddr: 10.131.71.100
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 20.45.100.2
+      sm: 30
+
+    ge-0/0/1.0:
+      ipaddr: 10.45.250.2
+      sm: 30
+
+    ge-0/0/3.0:
+      ipaddr: 10.45.100.1
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.100
+    interfaces:
+      - lo0.0
+      - ge-0/0/1.0
+      - ge-0/0/3.0
+
+  bgp:
+    local_asn: 8452
+    bgp_id: 163.125.60.100
+    neighbors:
+      163.125.60.30:
+        remote_asn: 65100
+        type: ebgp
+      163.125.60.40:
+        remote_asn: 65100
+        type: ebgp
+      80.132.100.1:
+        remote_asn: 3356
+        type: ebgp
+
+
+IGW2:
+  hostname: IGW2
+  port: 32769
+  mgmt_ip: 10.131.71.200
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.200
+      sm: 32
+
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.200
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 10.45.150.1
+      sm: 30
+
+    ge-0/0/1.0:
+      ipaddr: 20.45.200.2
+      sm: 30
+
+    ge-0/0/2.0:
+      ipaddr: 10.45.200.1
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.200
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+
+  bgp:
+    local_asn: 8452
+    bgp_id: 163.125.60.200
+    neighbors:
+      163.125.60.30:
+        remote_asn: 65100
+        type: ebgp
+      163.125.60.40:
+        remote_asn: 65100
+        type: ebgp
+      80.132.100.1:
+        remote_asn: 3356
+        type: ebgp
+
+Core2:
+  hostname: Core2
+  port: 32770
+  mgmt_ip: 10.131.71.60
+  interfaces:
+    lo0.0:
+      ipaddr: 163.125.60.60
+      sm: 32
+
+    fxp0.0:
+      ipaddr: 10.131.71.60
+      sm: 24
+
+    ge-0/0/2.0:
+      ipaddr: 10.45.10.1
+      sm: 30
+
+    ge-0/0/4.0:
+      ipaddr: 10.45.20.1
+      sm: 30
+
+  ospf:
+    ospf_id: 163.125.60.60
+    interfaces:
+      - lo0.0
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+      - ge-0/0/4.0
+
+  mpls:
+    mpls_id: 163.125.60.60
+    interfaces:
+      - ge-0/0/0.0
+      - ge-0/0/2.0
+      - ge-0/0/4.0
+
+
+Level3-IGW:
+  hostname: Level3-IGW
+  port: 32773
+  mgmt_ip: 10.131.71.250
+  interfaces:
+    lo0.0:
+      ipaddr: 80.132.100.1
+      sm: 32
+
+    ge-0/0/5.0:
+      ipaddr: 10.131.71.250
+      sm: 24
+
+    ge-0/0/0.0:
+      ipaddr: 20.45.100.1
+      sm: 30
+
+    ge-0/0/1.0:
+      ipaddr: 20.45.200.1
+      sm: 30
+
+  bgp:
+    local_asn: 3356
+    bgp_id: 80.132.100.1
+    neighbors:
+      163.125.60.100:
+        remote_asn: 8452
+        type: ebgp
+      163.125.60.200:
+        remote_asn: 8452
+        type: ebgp
+
