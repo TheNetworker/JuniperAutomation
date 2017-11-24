@@ -1,0 +1,117 @@
+set system host-name {{hostname}}
+
+{# ####################### Services Section ####################### #}
+
+set system services ssh root-login allow
+
+set system services telnet connection-limit 10
+
+set system services netconf ssh
+
+set system services netconf traceoptions flag all
+
+set system services rest enable-explorer
+
+
+delete interfaces fxp0.0 family inet dhcp 
+
+delete system processes dhcp-service
+
+delete system syslog
+
+delete chassis auto-image-upgrade 
+
+
+{# ####################### Interfaces Section ####################### #}
+
+{% if interfaces %}
+  {% for intf,intf_config in interfaces.items() %}
+
+top edit interfaces {{intf}} family inet
+ 
+ set address {{intf_config['ipaddr']}}/{{intf_config['sm']}}
+  {% endfor %}
+{% endif %}
+
+{# top edit routing-options static route 0.0.0.0/0
+ 
+ set next-hop 198.18.128.1
+ #}
+
+{# ####################### OSPF Section ####################### #}
+
+{% if ospf %}
+top
+
+set routing-options router-id {{ospf['ospf_id']}}
+
+  {% for ospf_intf in ospf['interfaces'] %}
+set protocols ospf area 0 interface {{ospf_intf}}
+
+  {% endfor %}
+
+{% endif %}
+
+{# ####################### MPLS Section ####################### #}
+
+{% if mpls %}
+top
+set protocols ldp transport-address router-id
+
+  {% for mpls_intf in mpls['interfaces'] %}
+set protocols mpls interface {{mpls_intf}}
+
+set protocols ldp interface {{mpls_intf}}
+
+  {% endfor %}
+
+{% endif %}
+
+{# ####################### BGP Section ####################### #}
+
+{% if bgp %}
+top
+set routing-options router-id {{bgp['bgp_id']}}
+ 
+set routing-options autonomous-system {{bgp['local_asn']}}
+
+top edit protocols bgp
+
+set export export_bgp
+
+edit group bgp_neighbors
+
+set local-address {{bgp['bgp_id']}}
+
+  {% for neighbor,neighbor_config in bgp['neighbors'].items() %}
+set neighbor {{neighbor}} peer-as {{neighbor_config['remote_asn']}} 
+
+  {% endfor %}
+
+
+top edit policy-options policy-statement export_bgp 
+
+edit term 1 
+
+edit from route-filter 0.0.0.0/32 address-mask 0.0.0.0
+
+set accept
+
+top edit policy-options policy-statement export_bgp
+
+edit term 2
+
+set from protocol bgp
+
+set from route-type external
+
+set then next-hop self
+
+{% endif %}
+
+{# ####################### Commit Section ####################### #}
+
+commit
+
+exit
+
