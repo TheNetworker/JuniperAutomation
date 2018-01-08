@@ -1,0 +1,15 @@
+---
+- get_facts:
+    os_version: 14.1R1.10
+
+- get_interfaces_ip:
+    ge-0/0/0.0:
+        ipv4
+
+- get_bgp_neighbors:
+    global:
+        peers
+
+- get_bgp_config:
+    bgp_neighbors:
+        local_address
